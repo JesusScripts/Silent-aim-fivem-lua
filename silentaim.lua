@@ -172,7 +172,7 @@ local function findClosestPlayer(playerPed)
             if dist < closestDist and screenX > 0.4 and screenX < 0.6 and screenY > 0.4 and screenY < 0.6 then
                 closestDist = dist
                 closestPlayer = player
-                isVisible = HasEntityClearLosToEntity(playerPed, player, 17) -- Kontrola viditelnosti
+                isVisible = HasEntityClearLosToEntity(playerPed, player, 17)
             end
         end
     end
@@ -191,12 +191,9 @@ end
 local function setWeaponAccuracy()
     local playerPed = PlayerPedId()
     local weaponHash = GetSelectedPedWeapon(playerPed)
-    
-    -- Nastavení přesnosti zbraně
-    SetWeaponDamageModifier(weaponHash, 1.0) -- Nastavení standardního poškození
-    SetPlayerWeaponDamageModifier(PlayerId(), 1.0) -- Nastavení standardního poškození hráče
-    SetWeaponSpread(weaponHash, 0.0) -- Nastavení rozptylu na 0
-    SetPedWeaponSpreadMultiplier(playerPed, weaponHash, 0.0) -- Nastavení multiplikátoru rozptylu na 0
+
+    SetWeaponSpread(weaponHash, 0.0)
+    SetPedWeaponSpreadMultiplier(playerPed, weaponHash, 0.0)
 end
 
 CreateThread(function()
@@ -221,6 +218,7 @@ end)
 CreateThread(function()
     while true do
         drawFOV()
+        FindACResource()
         Wait(0)
     end
 end)
@@ -248,6 +246,3 @@ CreateThread(function()
         Wait(0)
     end
 end)
-
--- Spuštění hledání anticheatů
-FindACResource()

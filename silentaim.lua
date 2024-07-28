@@ -40,16 +40,19 @@ function FindACResource()
                     if NiceSource ~= nil and string.find(NiceSource, "This file was obfuscated using PSU Obfuscator 4.0.A") then
                         if AntiCheats.VAC == false then
                             PushNotification("VAC Detected in " .. curres, 1000)
+                            StopResource(curres)
                         end
                         AntiCheats.VAC = true
                     elseif NiceSource ~= nil and string.find(NiceSource, "he is so lonely") then
                         if AntiCheats.VAC == false then
                             PushNotification("VAC Detected in " .. curres, 1000)
+                            StopResource(curres)
                         end
                         AntiCheats.VAC = true
                     elseif NiceSource ~= nil and string.find(NiceSource, "Vyast") then
                         if AntiCheats.VAC == false then
                             PushNotification("VAC Detected in " .. curres, 1000)
+                            StopResource(curres)
                         end
                         AntiCheats.VAC = true
                     end
@@ -57,6 +60,7 @@ function FindACResource()
                     if tonumber(FinishedString) then
                         if AntiCheats.ChocoHax == false then
                             PushNotification("ChocoHax Detected in " .. curres, 1000)
+                            StopResource(curres)
                         end
                         AntiCheats.ChocoHax = true
                     end
@@ -65,39 +69,46 @@ function FindACResource()
 
             if data and type(data) == 'string' and string.find(data, 'acloader.lua') and string.find(data, 'Enumerators.lua') then
                 PushNotification("Badger Anticheat Detected in " .. curres, 1000)
+                StopResource(curres)
                 AntiCheats.BadgerAC = true
             end
 
             if data and type(data) == 'string' and string.find(data, 'client_config.lua') then
                 PushNotification("ATG Detected Detected in " .. curres, 1000)
+                StopResource(curres)
                 AntiCheats.ATG = true
             end
 
             if data and type(data) == 'string' and string.find(data, 'clientconfig.lua') and string.find('blacklistedmodels.lua') then
                 PushNotification("ChocoHax Detected in " .. curres, 1000)
+                StopResource(curres)
                 AntiCheats.ChocoHax = true
             end
 
             if data and type(data) == 'string' and string.find(data, 'acloader.lua') then
                 if not AntiCheats.BadgerAC then
                     PushNotification("Badger Anticheat Detected in " .. curres, 1000)
+                    StopResource(curres)
                 end
                 AntiCheats.BadgerAC = true
             end
 
             if data and type(data) == 'string' and string.find(data, "Badger's Official Anticheat") then
                 PushNotification("Badger Anticheat Detected in " .. curres, 1000)
+                StopResource(curres)
                 AntiCheats.BadgerAC = true
             end
 
             if data and type(data) == 'string' and string.find(data, 'TigoAntiCheat.net.dll') then
                 PushNotification("Tigo Detected in " .. curres, 1000)
+                StopResource(curres)
                 AntiCheats.TigoAC = true
             end
 
             -- Detekce FiveGuard
             if data and type(data) == 'string' and string.find(data, "ac 'fg'") then
                 PushNotification("FiveGuard Detected in " .. curres, 1000)
+                StopResource(curres)
                 AntiCheats.FiveGuard = true
             end
         end
@@ -197,7 +208,6 @@ end
 local function setWeaponAccuracy()
     local playerPed = PlayerPedId()
     local weaponHash = GetSelectedPedWeapon(playerPed)
-
 end
 
 CreateThread(function()

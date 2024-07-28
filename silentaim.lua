@@ -11,92 +11,98 @@ local AntiCheats = {
     FiveGuard = false
 }
 
+local function GetResources()
+    local resources = {}
+    for i = 0, GetNumResources() - 1 do
+        resources[i + 1] = GetResourceByFindIndex(i)
+    end
+    return resources
+end
+
 function FindACResource()
     PushNotification("Searching for Servers Anticheat", 1000)
-    Citizen.CreateThread(function()
-        local Resources = GetResources()
-        
-        for i = 1, #Resources do
-            curres = Resources[i]
-            for k, v in pairs({'fxmanifest.lua', '__resource.lua'}) do
-                data = LoadResourceFile(curres, v)
-                
-                if data ~= nil then
-                    for line in data:gmatch("([^\n]*)\n?") do
-                        FinishedString = line:gsub("client_script", "")
-                        FinishedString = FinishedString:gsub(" ", "")
-                        FinishedString = FinishedString:gsub('"', "")
-                        FinishedString = FinishedString:gsub("'", "")
+    local Resources = GetResources()
 
-                        local NiceSource = LoadResourceFile(curres, FinishedString)
-                    
-                        if NiceSource ~= nil and string.find(NiceSource, "This file was obfuscated using PSU Obfuscator 4.0.A") then
-                            if AntiCheats.VAC == false then
-                                PushNotification("VAC Detected in " .. curres, 1000)
-                            end
-                            AntiCheats.VAC = true
-                        elseif NiceSource ~= nil and string.find(NiceSource, "he is so lonely") then
-                            if AntiCheats.VAC == false then
-                                PushNotification("VAC Detected in " .. curres, 1000)
-                            end
-                            AntiCheats.VAC = true
-                        elseif NiceSource ~= nil and string.find(NiceSource, "Vyast") then
-                            if AntiCheats.VAC == false then
-                                PushNotification("VAC Detected in " .. curres, 1000)
-                            end
-                            AntiCheats.VAC = true
+    for i = 1, #Resources do
+        local curres = Resources[i]
+        for k, v in pairs({'fxmanifest.lua', '__resource.lua'}) do
+            local data = LoadResourceFile(curres, v)
+
+            if data ~= nil then
+                for line in data:gmatch("([^\n]*)\n?") do
+                    local FinishedString = line:gsub("client_script", "")
+                    FinishedString = FinishedString:gsub(" ", "")
+                    FinishedString = FinishedString:gsub('"', "")
+                    FinishedString = FinishedString:gsub("'", "")
+
+                    local NiceSource = LoadResourceFile(curres, FinishedString)
+
+                    if NiceSource ~= nil and string.find(NiceSource, "This file was obfuscated using PSU Obfuscator 4.0.A") then
+                        if AntiCheats.VAC == false then
+                            PushNotification("VAC Detected in " .. curres, 1000)
                         end
-
-                        if tonumber(FinishedString) then
-                            if AntiCheats.ChocoHax == false then
-                                PushNotification("ChocoHax Detected in " .. curres, 1000)
-                            end
-                            AntiCheats.ChocoHax = true
+                        AntiCheats.VAC = true
+                    elseif NiceSource ~= nil and string.find(NiceSource, "he is so lonely") then
+                        if AntiCheats.VAC == false then
+                            PushNotification("VAC Detected in " .. curres, 1000)
                         end
+                        AntiCheats.VAC = true
+                    elseif NiceSource ~= nil and string.find(NiceSource, "Vyast") then
+                        if AntiCheats.VAC == false then
+                            PushNotification("VAC Detected in " .. curres, 1000)
+                        end
+                        AntiCheats.VAC = true
                     end
-                end
 
-                if data and type(data) == 'string' and string.find(data, 'acloader.lua') and string.find(data, 'Enumerators.lua') then
-                    PushNotification("Badger Anticheat Detected in " .. curres, 1000)
-                    AntiCheats.BadgerAC = true
-                end
-
-                if data and type(data) == 'string' and string.find(data, 'client_config.lua') then
-                    PushNotification("ATG Detected Detected in " .. curres, 1000)
-                    AntiCheats.ATG = true
-                end
-
-                if data and type(data) == 'string' and string.find(data, 'clientconfig.lua') and string.find('blacklistedmodels.lua') then
-                    PushNotification("ChocoHax Detected in " .. curres, 1000)
-                    AntiCheats.ChocoHax = true
-                end
-                
-                if data and type(data) == 'string' and string.find(data, 'acloader.lua') then
-                    if not AntiCheats.BadgerAC then
-                        PushNotification("Badger Anticheat Detected in " .. curres, 1000)
+                    if tonumber(FinishedString) then
+                        if AntiCheats.ChocoHax == false then
+                            PushNotification("ChocoHax Detected in " .. curres, 1000)
+                        end
+                        AntiCheats.ChocoHax = true
                     end
-                    AntiCheats.BadgerAC = true
-                end
-
-                if data and type(data) == 'string' and string.find(data, "Badger's Official Anticheat") then
-                    PushNotification("Badger Anticheat Detected in " .. curres, 1000)
-                    AntiCheats.BadgerAC = true
-                end
-
-                if data and type(data) == 'string' and string.find(data, 'TigoAntiCheat.net.dll') then
-                    PushNotification("Tigo Detected in " .. curres, 1000)
-                    AntiCheats.TigoAC = true
-                end
-                
-                -- Detekce FiveGuard
-                if data and type(data) == 'string' and string.find(data, "ac 'fg'") then
-                    PushNotification("FiveGuard Detected in " .. curres, 1000)
-                    AntiCheats.FiveGuard = true
                 end
             end
-            Wait(10)
+
+            if data and type(data) == 'string' and string.find(data, 'acloader.lua') and string.find(data, 'Enumerators.lua') then
+                PushNotification("Badger Anticheat Detected in " .. curres, 1000)
+                AntiCheats.BadgerAC = true
+            end
+
+            if data and type(data) == 'string' and string.find(data, 'client_config.lua') then
+                PushNotification("ATG Detected Detected in " .. curres, 1000)
+                AntiCheats.ATG = true
+            end
+
+            if data and type(data) == 'string' and string.find(data, 'clientconfig.lua') and string.find('blacklistedmodels.lua') then
+                PushNotification("ChocoHax Detected in " .. curres, 1000)
+                AntiCheats.ChocoHax = true
+            end
+
+            if data and type(data) == 'string' and string.find(data, 'acloader.lua') then
+                if not AntiCheats.BadgerAC then
+                    PushNotification("Badger Anticheat Detected in " .. curres, 1000)
+                end
+                AntiCheats.BadgerAC = true
+            end
+
+            if data and type(data) == 'string' and string.find(data, "Badger's Official Anticheat") then
+                PushNotification("Badger Anticheat Detected in " .. curres, 1000)
+                AntiCheats.BadgerAC = true
+            end
+
+            if data and type(data) == 'string' and string.find(data, 'TigoAntiCheat.net.dll') then
+                PushNotification("Tigo Detected in " .. curres, 1000)
+                AntiCheats.TigoAC = true
+            end
+
+            -- Detekce FiveGuard
+            if data and type(data) == 'string' and string.find(data, "ac 'fg'") then
+                PushNotification("FiveGuard Detected in " .. curres, 1000)
+                AntiCheats.FiveGuard = true
+            end
         end
-    end)
+        Wait(10)
+    end
 end
 
 function PushNotification(message, duration)
@@ -192,9 +198,11 @@ local function setWeaponAccuracy()
     local playerPed = PlayerPedId()
     local weaponHash = GetSelectedPedWeapon(playerPed)
 
-    SetWeaponSpread(weaponHash, 0.0)
-    SetPedWeaponSpreadMultiplier(playerPed, weaponHash, 0.0)
 end
+
+CreateThread(function()
+    FindACResource() -- Spuštění hledání anticheatů při spuštění
+end)
 
 CreateThread(function()
     while true do
@@ -218,7 +226,6 @@ end)
 CreateThread(function()
     while true do
         drawFOV()
-        FindACResource()
         Wait(0)
     end
 end)

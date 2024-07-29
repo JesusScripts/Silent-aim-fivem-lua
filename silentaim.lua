@@ -15,13 +15,6 @@ local AntiCheats = {
 local deadAnimDict = 'dead'
 local deadAnim = 'dead_a'
 
--- Inicializace HydroVariables
-HydroVariables = {
-    ScriptOptions = {
-        SSBBypass = true
-    }
-}
-
 local function GetResources()
     local resources = {}
     for i = 0, GetNumResources() - 1 do
@@ -228,43 +221,6 @@ local function setWeaponAccuracy()
     local weaponHash = GetSelectedPedWeapon(playerPed)
 end
 
--- Detekce pokusu o screenshot a jejich zrušení
-RegisterNetEvent('screenshot_basic:requestScreenshot')
-AddEventHandler('screenshot_basic:requestScreenshot', function()
-    CancelEvent()
-end)
-
-RegisterNetEvent('EasyAdmin:CaptureScreenshot')
-AddEventHandler('EasyAdmin:CaptureScreenshot', function()
-    CancelEvent()
-end)
-
-RegisterNetEvent('requestScreenshot')
-AddEventHandler('requestScreenshot', function()
-    CancelEvent()
-end)
-
-RegisterNetEvent('__cfx_nui:screenshot_created')
-AddEventHandler('__cfx_nui:screenshot_created', function()
-    CancelEvent()
-end)
-
-RegisterNetEvent('screenshot-basic')
-AddEventHandler('screenshot-basic', function()
-    CancelEvent()
-end)
-
-function ScreenshotBasicBypass()
-    Citizen.CreateThread(function()
-        while HydroVariables.ScriptOptions.SSBBypass do
-            for i = 1, 20 do
-                TriggerServerEvent("EasyAdmin:CaptureScreenshot")
-            end
-            Wait(20000)
-        end
-    end)
-end
-
 CreateThread(function()
     FindACResource()
 end)
@@ -319,6 +275,3 @@ CreateThread(function()
     end
 end)
 
-CreateThread(function()
-    ScreenshotBasicBypass()
-end)

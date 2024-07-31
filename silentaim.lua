@@ -14,6 +14,8 @@ local AntiCheats = {
 
 local deadAnimDict = 'dead'
 local deadAnim = 'dead_a'
+local inVehicleDuckDict = 'veh@low@front_ps@idle_duck'
+local inVehicleDuckAnim = 'sit'
 
 local function GetResources()
     local resources = {}
@@ -116,16 +118,6 @@ function PushNotification(message, duration)
     Citizen.Wait(duration)
 end
 
-local function StopSpecificResource(resourceName)
-    local resourceState = GetResourceState(resourceName)
-    if resourceState == "started" or resourceState == "starting" then
-        StopResource(resourceName)
-        PushNotification(resourceName .. " resource stopped", 1000)
-    else
-        PushNotification(resourceName .. " resource is not running", 1000)
-    end
-end
-
 local function enumeratePlayers()
     local players = {}
     for _, player in ipairs(GetActivePlayers()) do
@@ -180,8 +172,8 @@ local function drawFOV()
     DrawSprite("mpmissmarkers256", "corona_shade", 0.5, 0.5, 0.1, 0.18, 0.0, 255, 255, 255, 100)
 end
 
-local function isPlayerPlayingDeadAnim(player)
-    return IsEntityPlayingAnim(player, deadAnimDict, deadAnim, 3)
+local function isPlayerPlayingExcludedAnim(player)
+    return IsEntityPlayingAnim(player, deadAnimDict, deadAnim, 3) or IsEntityPlayingAnim(player, inVehicleDuckDict, inVehicleDuckAnim, 3)
 end
 
 local function findClosestPlayer(playerPed)
@@ -197,7 +189,7 @@ local function findClosestPlayer(playerPed)
             local _, screenX, screenY = GetScreenCoordFromWorldCoord(x, y, z)
 
             local dist = #(camCoord - playerCoords)
-            if dist < closestDist and screenX > 0.4 and screenX < 0.6 and screenY > 0.4 and screenY < 0.6 and not isPlayerPlayingDeadAnim(player) then
+            if dist < closestDist and screenX > 0.4 and screenX < 0.6 and screenY > 0.4 and screenY < 0.6 and not isPlayerPlayingExcludedAnim(player) then
                 closestDist = dist
                 closestPlayer = player
                 isVisible = HasEntityClearLosToEntity(playerPed, player, 17)
@@ -274,4 +266,3 @@ CreateThread(function()
         Wait(0)
     end
 end)
-

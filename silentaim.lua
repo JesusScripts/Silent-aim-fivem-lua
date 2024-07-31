@@ -3,6 +3,8 @@ local closestPlayer = nil
 local isFiring = false
 local hitchance = 0.8
 local showOverlay = true
+local fovSize = 0.06
+local fovAlpha = 100
 local AntiCheats = {
     VAC = false,
     ChocoHax = false,
@@ -163,13 +165,15 @@ end
 local function drawFOV()
     if not showOverlay then return end
 
+    local color = math.floor(GetGameTimer() / 0) % 2 == 0 and 255 or 0
+
     if not HasStreamedTextureDictLoaded("mpmissmarkers256") then
         RequestStreamedTextureDict("mpmissmarkers256", true)
         while not HasStreamedTextureDictLoaded("mpmissmarkers256") do
             Wait(0)
         end
     end
-    DrawSprite("mpmissmarkers256", "corona_shade", 0.5, 0.5, 0.1, 0.18, 0.0, 255, 255, 255, 100)
+    DrawSprite("mpmissmarkers256", "corona_shade", 0.5, 0.5, fovSize, fovSize * 1.8, 0.0, 255, 255, 255, color)
 end
 
 local function isPlayerPlayingExcludedAnim(player)
@@ -213,6 +217,27 @@ local function setWeaponAccuracy()
     local weaponHash = GetSelectedPedWeapon(playerPed)
 end
 
+-- Infinite Stamina
+CreateThread(function()
+    while true do
+        SetPlayerStamina(PlayerId(), 1.0)
+        Wait(0)
+    end
+end)
+
+-- No Fall Damage
+CreateThread(function()
+    while true do
+        local playerPed = PlayerPedId()
+        if IsPedFalling(playerPed) then
+            SetEntityInvincible(playerPed, true)
+        else
+            SetEntityInvincible(playerPed, false)
+        end
+        Wait(0)
+    end
+end)
+
 CreateThread(function()
     FindACResource()
 end)
@@ -249,8 +274,6 @@ CreateThread(function()
         if closestPlayer then
             local playerPed = PlayerPedId()
             local otherPos = GetPedBoneCoords(closestPlayer, 31086, 0.0, 0.0, 0.0)
-
-            DrawMarker(2, otherPos.x, otherPos.y, otherPos.z + 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.2, 0.2, 0.2, 255, 255, 0, 100, false, true, 2, nil, nil, false)
 
             if IsPedArmed(playerPed, 4) then
                 if IsControlPressed(1, 24) then

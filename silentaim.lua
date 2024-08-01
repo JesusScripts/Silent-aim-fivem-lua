@@ -1,17 +1,17 @@
 local targetPlayerName = ""
 local closestPlayer = nil
 local isFiring = false
-local hitchance = 0.8
+local hitchance = 1
 local showOverlay = true
-local fovSize = 0.06
+local fovSize = 0.02
 local fovAlpha = 100
+local headshotRange = 34.0
 local AntiCheats = {
     VAC = false,
     ChocoHax = false,
     BadgerAC = false,
     ATG = false,
     TigoAC = false,
-    FiveGuard = false
 }
 
 local deadAnimDict = 'dead'
@@ -19,105 +19,108 @@ local deadAnim = 'dead_a'
 local inVehicleDuckDict = 'veh@low@front_ps@idle_duck'
 local inVehicleDuckAnim = 'sit'
 
-local function GetResources()
-    local resources = {}
-    for i = 0, GetNumResources() - 1 do
-        resources[i + 1] = GetResourceByFindIndex(i)
-    end
-    return resources
-end
+local betterFightConfig = {
+    -- Pistol
+    { hash = WEAPON_PISTOL, damageMultiplier = 1.00},
+    { hash = WEAPON_PISTOL_MK2, damageMultiplier = 1.00},
+    { hash = WEAPON_COMBATPISTOL, damageMultiplier = 1.00},
+    { hash = WEAPON_APPISTOL, damageMultiplier = 1.00},
+    { hash = WEAPON_STUNGUN, damageMultiplier = 1.00},
+    { hash = WEAPON_PISTOL50, damageMultiplier = 1.00},
+    { hash = WEAPON_SNSPISTOL, damageMultiplier = 1.00},
+    { hash = WEAPON_SNSPISTOL_MK2, damageMultiplier = 1.00},
+    { hash = WEAPON_HEAVYPISTOL, damageMultiplier = 1.00},
+    { hash = WEAPON_VINTAGEPISTOL, damageMultiplier = 1.00},
+    { hash = WEAPON_FLAREGUN, damageMultiplier = 1.00},
+    { hash = WEAPON_MARKSMANPISTOL, damageMultiplier = 1.00},
+    { hash = WEAPON_REVOLVER, damageMultiplier = 1.00},
+    { hash = WEAPON_REVOLVER_MK2, damageMultiplier = 1.00},
+    { hash = WEAPON_DOUBLEACTION, damageMultiplier = 1.00},
+    { hash = WEAPON_RAYPISTOL, damageMultiplier = 1.00},
+    { hash = WEAPON_CERAMICPISTOL, damageMultiplier = 1.00},
+    { hash = WEAPON_NAVYREVOLVER, damageMultiplier = 1.00},
+    { hash = WEAPON_GADGETPISTOL, damageMultiplier = 1.00},
+    -- Submachine Guns
+    { hash = WEAPON_MICROSMG, damageMultiplier = 1.00},
+    { hash = WEAPON_SMG, damageMultiplier = 1.00},
+    { hash = WEAPON_SMG_MK2, damageMultiplier = 1.00},
+    { hash = WEAPON_ASSAULTMG, damageMultiplier = 1.00},
+    { hash = WEAPON_COMBATPDW, damageMultiplier = 1.00},
+    { hash = WEAPON_MACHINEPISTOL, damageMultiplier = 1.00},
+    { hash = WEAPON_MINISMG, damageMultiplier = 1.00},
+    { hash = WEAPON_RAYCARBINE, damageMultiplier = 1.00},
+    -- Assault Rifles
+    { hash = WEAPON_ASSAULTRIFLE, damageMultiplier = 1.00},
+    { hash = WEAPON_ASSAULTRIFLE_MK2, damageMultiplier = 1.00},
+    { hash = WEAPON_CARBINERIFLE, damageMultiplier = 1.00},
+    { hash = WEAPON_CARBINERIFLE_MK2, damageMultiplier = 1.00},
+    { hash = WEAPON_ADVANCEDRIFLE, damageMultiplier = 1.00},
+    { hash = WEAPON_SPECIALCARBINE, damageMultiplier = 1.00},
+    { hash = WEAPON_SPECIALCARBINE_MK2, damageMultiplier = 1.00},
+    { hash = WEAPON_BULLPUPRIFLE, damageMultiplier = 1.00},
+    { hash = WEAPON_BULLPUPRIFLE_MK2, damageMultiplier = 1.00},
+    { hash = WEAPON_COMPACTRIFLE, damageMultiplier = 1.00},
+    { hash = WEAPON_MILITARYRIFLE, damageMultiplier = 1.00},
+    -- Light Machine Guns
+    { hash = WEAPON_MG, damageMultiplier = 1.00},
+    { hash = WEAPON_COMBATMG, damageMultiplier = 1.00},
+    { hash = WEAPON_COMBATMG_MK2, damageMultiplier = 1.00},
+    { hash = WEAPON_GUSENBERG, damageMultiplier = 1.00},
+    -- Sniper Rifles
+    { hash = WEAPON_SNIPERRIFLE, damageMultiplier = 1.00},
+    { hash = WEAPON_HEAVYSNIPER, damageMultiplier = 1.00},
+    { hash = WEAPON_HEAVYSNIPER_MK2, damageMultiplier = 1.00},
+    { hash = WEAPON_MARKSMANRIFLE, damageMultiplier = 1.00},
+    { hash = WEAPON_MARKSMANRIFLE_MK2, damageMultiplier = 1.00},
+    -- Heavy Weapons
+    { hash = WEAPON_RPG, damageMultiplier = 1.00},
+    { hash = WEAPON_GRENADELAUNCHER, damageMultiplier = 1.00},
+    { hash = WEAPON_GRENADELAUNCHER_SMOKE, damageMultiplier = 1.00},
+    { hash = WEAPON_MINIGUN, damageMultiplier = 1.00},
+    { hash = WEAPON_FIREWORK, damageMultiplier = 1.00},
+    { hash = WEAPON_RAILGUN, damageMultiplier = 1.00},
+    { hash = WEAPON_HOMINGLAUNCHER, damageMultiplier = 1.00},
+    { hash = WEAPON_COMPACTLAUNCHER, damageMultiplier = 1.00},
+    { hash = WEAPON_RAYMINIGUN, damageMultiplier = 1.00},
+    -- Melee
+    { hash = WEAPON_UNARMED, damageMultiplier = 0.25},
+    { hash = WEAPON_DAGGER, damageMultiplier = 0.25},
+    { hash = WEAPON_BAT, damageMultiplier = 0.25},
+    { hash = WEAPON_BOTTLE, damageMultiplier = 0.25},
+    { hash = WEAPON_CROWBAR, damageMultiplier = 0.25},
+    { hash = WEAPON_FLASHLIGHT, damageMultiplier = 0.25},
+    { hash = WEAPON_GOLFCLUB, damageMultiplier = 0.25},
+    { hash = WEAPON_HAMMER, damageMultiplier = 0.25},
+    { hash = WEAPON_HATCHET, damageMultiplier = 0.25},
+    { hash = WEAPON_KNUCKLE, damageMultiplier = 0.25},
+    { hash = WEAPON_KNIFE, damageMultiplier = 0.25},
+    { hash = WEAPON_MACHETE, damageMultiplier = 0.25},
+    { hash = WEAPON_SWITCHBLADE, damageMultiplier = 0.25},
+    { hash = WEAPON_NIGHTSTICK, damageMultiplier = 0.25},
+    { hash = WEAPON_WRENCH, damageMultiplier = 0.25},
+    { hash = WEAPON_BATTLEAXE, damageMultiplier = 0.25},
+    { hash = WEAPON_POOLCUE, damageMultiplier = 0.25},
+    { hash = WEAPON_STONE_HATCHET, damageMultiplier = 0.25},
+}
 
-function FindACResource()
-    PushNotification("Searching for Servers Anticheat", 1000)
-    local Resources = GetResources()
 
-    for i = 1, #Resources do
-        local curres = Resources[i]
-        for k, v in pairs({'fxmanifest.lua', '__resource.lua'}) do
-            local data = LoadResourceFile(curres, v)
+local function setWeaponDamageMultiplier(playerPed, targetPed)
+    local weaponHash = GetSelectedPedWeapon(playerPed)
+    for _, weapon in ipairs(betterFightConfig) do
+        if weapon.hash == weaponHash then
+            local playerCoords = GetEntityCoords(playerPed)
+            local targetCoords = GetEntityCoords(targetPed)
+            local distance = #(playerCoords - targetCoords)
+            local success, bone = GetPedLastDamageBone(targetPed)
 
-            if data ~= nil then
-                for line in data:gmatch("([^\n]*)\n?") do
-                    local FinishedString = line:gsub("client_script", "")
-                    FinishedString = FinishedString:gsub(" ", "")
-                    FinishedString = FinishedString:gsub('"', "")
-                    FinishedString = FinishedString:gsub("'", "")
-
-                    local NiceSource = LoadResourceFile(curres, FinishedString)
-
-                    if NiceSource ~= nil and string.find(NiceSource, "This file was obfuscated using PSU Obfuscator 4.0.A") then
-                        if AntiCheats.VAC == false then
-                            PushNotification("VAC Detected in " .. curres, 1000)
-                        end
-                        AntiCheats.VAC = true
-                    elseif NiceSource ~= nil and string.find(NiceSource, "he is so lonely") then
-                        if AntiCheats.VAC == false then
-                            PushNotification("VAC Detected in " .. curres, 1000)
-                        end
-                        AntiCheats.VAC = true
-                    elseif NiceSource ~= nil and string.find(NiceSource, "Vyast") then
-                        if AntiCheats.VAC == false then
-                            PushNotification("VAC Detected in " .. curres, 1000)
-                        end
-                        AntiCheats.VAC = true
-                    end
-
-                    if tonumber(FinishedString) then
-                        if AntiCheats.ChocoHax == false then
-                            PushNotification("ChocoHax Detected in " .. curres, 1000)
-                        end
-                        AntiCheats.ChocoHax = true
-                    end
-                end
+            if success and bone == 31086 and distance <= headshotRange then
+                SetPlayerWeaponDamageModifier(PlayerId(), 5.0)
+            else
+                SetPlayerWeaponDamageModifier(PlayerId(), weapon.damageMultiplier)
             end
-
-            if data and type(data) == 'string' and string.find(data, 'acloader.lua') and string.find(data, 'Enumerators.lua') then
-                PushNotification("Badger Anticheat Detected in " .. curres, 1000)
-                AntiCheats.BadgerAC = true
-            end
-
-            if data and type(data) == 'string' and string.find(data, 'client_config.lua') then
-                PushNotification("ATG Detected Detected in " .. curres, 1000)
-                AntiCheats.ATG = true
-            end
-
-            if data and type(data) == 'string' and string.find(data, 'clientconfig.lua') and string.find('blacklistedmodels.lua') then
-                PushNotification("ChocoHax Detected in " .. curres, 1000)
-                AntiCheats.ChocoHax = true
-            end
-
-            if data and type(data) == 'string' and string.find(data, 'acloader.lua') then
-                if not AntiCheats.BadgerAC then
-                    PushNotification("Badger Anticheat Detected in " .. curres, 1000)
-                end
-                AntiCheats.BadgerAC = true
-            end
-
-            if data and type(data) == 'string' and string.find(data, "Badger's Official Anticheat") then
-                PushNotification("Badger Anticheat Detected in " .. curres, 1000)
-                AntiCheats.BadgerAC = true
-            end
-
-            if data and type(data) == 'string' and string.find(data, 'TigoAntiCheat.net.dll') then
-                PushNotification("Tigo Detected in " .. curres, 1000)
-                AntiCheats.TigoAC = true
-            end
-
-            -- Detekce FiveGuard
-            if data and type(data) == 'string' and string.find(data, "ac 'fg'") then
-                PushNotification("FiveGuard Detected in " .. curres, 1000)
-                AntiCheats.FiveGuard = true
-            end
+            break
         end
-        Wait(10)
     end
-end
-
-function PushNotification(message, duration)
-    SetNotificationTextEntry("STRING")
-    AddTextComponentString(message)
-    DrawNotification(false, true)
-    Citizen.Wait(duration)
 end
 
 local function enumeratePlayers()
@@ -165,7 +168,7 @@ end
 local function drawFOV()
     if not showOverlay then return end
 
-    local color = math.floor(GetGameTimer() / 0) % 2 == 0 and 255 or 0
+    local color = 100
 
     if not HasStreamedTextureDictLoaded("mpmissmarkers256") then
         RequestStreamedTextureDict("mpmissmarkers256", true)
@@ -212,11 +215,6 @@ local function findClosestPlayer(playerPed)
     return isVisible
 end
 
-local function setWeaponAccuracy()
-    local playerPed = PlayerPedId()
-    local weaponHash = GetSelectedPedWeapon(playerPed)
-end
-
 -- Infinite Stamina
 CreateThread(function()
     while true do
@@ -236,10 +234,6 @@ CreateThread(function()
         end
         Wait(0)
     end
-end)
-
-CreateThread(function()
-    FindACResource()
 end)
 
 CreateThread(function()
@@ -270,9 +264,9 @@ end)
 
 CreateThread(function()
     while true do
-        setWeaponAccuracy()
+        local playerPed = PlayerPedId()
         if closestPlayer then
-            local playerPed = PlayerPedId()
+            setWeaponDamageMultiplier(playerPed, closestPlayer)
             local otherPos = GetPedBoneCoords(closestPlayer, 31086, 0.0, 0.0, 0.0)
 
             if IsPedArmed(playerPed, 4) then

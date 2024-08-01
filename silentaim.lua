@@ -3,7 +3,7 @@ local closestPlayer = nil
 local isFiring = false
 local hitchance = 1
 local showOverlay = true
-local fovSize = 0.02
+local fovSize = 0.06
 local fovAlpha = 100
 local headshotRange = 34.0
 local AntiCheats = {
@@ -21,91 +21,91 @@ local inVehicleDuckAnim = 'sit'
 
 local betterFightConfig = {
     -- Pistol
-    { hash = WEAPON_PISTOL, damageMultiplier = 1.00},
-    { hash = WEAPON_PISTOL_MK2, damageMultiplier = 1.00},
-    { hash = WEAPON_COMBATPISTOL, damageMultiplier = 1.00},
-    { hash = WEAPON_APPISTOL, damageMultiplier = 1.00},
-    { hash = WEAPON_STUNGUN, damageMultiplier = 1.00},
-    { hash = WEAPON_PISTOL50, damageMultiplier = 1.00},
-    { hash = WEAPON_SNSPISTOL, damageMultiplier = 1.00},
-    { hash = WEAPON_SNSPISTOL_MK2, damageMultiplier = 1.00},
-    { hash = WEAPON_HEAVYPISTOL, damageMultiplier = 1.00},
-    { hash = WEAPON_VINTAGEPISTOL, damageMultiplier = 1.00},
-    { hash = WEAPON_FLAREGUN, damageMultiplier = 1.00},
-    { hash = WEAPON_MARKSMANPISTOL, damageMultiplier = 1.00},
-    { hash = WEAPON_REVOLVER, damageMultiplier = 1.00},
-    { hash = WEAPON_REVOLVER_MK2, damageMultiplier = 1.00},
-    { hash = WEAPON_DOUBLEACTION, damageMultiplier = 1.00},
-    { hash = WEAPON_RAYPISTOL, damageMultiplier = 1.00},
-    { hash = WEAPON_CERAMICPISTOL, damageMultiplier = 1.00},
-    { hash = WEAPON_NAVYREVOLVER, damageMultiplier = 1.00},
-    { hash = WEAPON_GADGETPISTOL, damageMultiplier = 1.00},
+    { hash = `WEAPON_PISTOL`, damageMultiplier = 1.00},
+    { hash = `WEAPON_PISTOL_MK2`, damageMultiplier = 1.00},
+    { hash = `WEAPON_COMBATPISTOL`, damageMultiplier = 1.00},
+    { hash = `WEAPON_APPISTOL`, damageMultiplier = 1.00},
+    { hash = `WEAPON_STUNGUN`, damageMultiplier = 1.00},
+    { hash = `WEAPON_PISTOL50`, damageMultiplier = 1.00},
+    { hash = `WEAPON_SNSPISTOL`, damageMultiplier = 1.00},
+    { hash = `WEAPON_SNSPISTOL_MK2`, damageMultiplier = 1.00},
+    { hash = `WEAPON_HEAVYPISTOL`, damageMultiplier = 1.00},
+    { hash = `WEAPON_VINTAGEPISTOL`, damageMultiplier = 1.00},
+    { hash = `WEAPON_FLAREGUN`, damageMultiplier = 1.00},
+    { hash = `WEAPON_MARKSMANPISTOL`, damageMultiplier = 1.00},
+    { hash = `WEAPON_REVOLVER`, damageMultiplier = 1.00},
+    { hash = `WEAPON_REVOLVER_MK2`, damageMultiplier = 1.00},
+    { hash = `WEAPON_DOUBLEACTION`, damageMultiplier = 1.00},
+    { hash = `WEAPON_RAYPISTOL`, damageMultiplier = 1.00},
+    { hash = `WEAPON_CERAMICPISTOL`, damageMultiplier = 1.00},
+    { hash = `WEAPON_NAVYREVOLVER`, damageMultiplier = 1.00},
+    { hash = `WEAPON_GADGETPISTOL`, damageMultiplier = 1.00},
     -- Submachine Guns
-    { hash = WEAPON_MICROSMG, damageMultiplier = 1.00},
-    { hash = WEAPON_SMG, damageMultiplier = 1.00},
-    { hash = WEAPON_SMG_MK2, damageMultiplier = 1.00},
-    { hash = WEAPON_ASSAULTMG, damageMultiplier = 1.00},
-    { hash = WEAPON_COMBATPDW, damageMultiplier = 1.00},
-    { hash = WEAPON_MACHINEPISTOL, damageMultiplier = 1.00},
-    { hash = WEAPON_MINISMG, damageMultiplier = 1.00},
-    { hash = WEAPON_RAYCARBINE, damageMultiplier = 1.00},
+    { hash = `WEAPON_MICROSMG`, damageMultiplier = 1.00},
+    { hash = `WEAPON_SMG`, damageMultiplier = 1.00},
+    { hash = `WEAPON_SMG_MK2`, damageMultiplier = 1.00},
+    { hash = `WEAPON_ASSAULTMG`, damageMultiplier = 1.00},
+    { hash = `WEAPON_COMBATPDW`, damageMultiplier = 1.00},
+    { hash = `WEAPON_MACHINEPISTOL`, damageMultiplier = 1.00},
+    { hash = `WEAPON_MINISMG`, damageMultiplier = 1.00},
+    { hash = `WEAPON_RAYCARBINE`, damageMultiplier = 1.00},
     -- Assault Rifles
-    { hash = WEAPON_ASSAULTRIFLE, damageMultiplier = 1.00},
-    { hash = WEAPON_ASSAULTRIFLE_MK2, damageMultiplier = 1.00},
-    { hash = WEAPON_CARBINERIFLE, damageMultiplier = 1.00},
-    { hash = WEAPON_CARBINERIFLE_MK2, damageMultiplier = 1.00},
-    { hash = WEAPON_ADVANCEDRIFLE, damageMultiplier = 1.00},
-    { hash = WEAPON_SPECIALCARBINE, damageMultiplier = 1.00},
-    { hash = WEAPON_SPECIALCARBINE_MK2, damageMultiplier = 1.00},
-    { hash = WEAPON_BULLPUPRIFLE, damageMultiplier = 1.00},
-    { hash = WEAPON_BULLPUPRIFLE_MK2, damageMultiplier = 1.00},
-    { hash = WEAPON_COMPACTRIFLE, damageMultiplier = 1.00},
-    { hash = WEAPON_MILITARYRIFLE, damageMultiplier = 1.00},
+    { hash = `WEAPON_ASSAULTRIFLE`, damageMultiplier = 1.00},
+    { hash = `WEAPON_ASSAULTRIFLE_MK2`, damageMultiplier = 1.00},
+    { hash = `WEAPON_CARBINERIFLE`, damageMultiplier = 1.00},
+    { hash = `WEAPON_CARBINERIFLE_MK2`, damageMultiplier = 1.00},
+    { hash = `WEAPON_ADVANCEDRIFLE`, damageMultiplier = 1.00},
+    { hash = `WEAPON_SPECIALCARBINE`, damageMultiplier = 1.00},
+    { hash = `WEAPON_SPECIALCARBINE_MK2`, damageMultiplier = 1.00},
+    { hash = `WEAPON_BULLPUPRIFLE`, damageMultiplier = 1.00},
+    { hash = `WEAPON_BULLPUPRIFLE_MK2`, damageMultiplier = 1.00},
+    { hash = `WEAPON_COMPACTRIFLE`, damageMultiplier = 1.00},
+    { hash = `WEAPON_MILITARYRIFLE`, damageMultiplier = 1.00},
     -- Light Machine Guns
-    { hash = WEAPON_MG, damageMultiplier = 1.00},
-    { hash = WEAPON_COMBATMG, damageMultiplier = 1.00},
-    { hash = WEAPON_COMBATMG_MK2, damageMultiplier = 1.00},
-    { hash = WEAPON_GUSENBERG, damageMultiplier = 1.00},
+    { hash = `WEAPON_MG`, damageMultiplier = 1.00},
+    { hash = `WEAPON_COMBATMG`, damageMultiplier = 1.00},
+    { hash = `WEAPON_COMBATMG_MK2`, damageMultiplier = 1.00},
+    { hash = `WEAPON_GUSENBERG`, damageMultiplier = 1.00},
     -- Sniper Rifles
-    { hash = WEAPON_SNIPERRIFLE, damageMultiplier = 1.00},
-    { hash = WEAPON_HEAVYSNIPER, damageMultiplier = 1.00},
-    { hash = WEAPON_HEAVYSNIPER_MK2, damageMultiplier = 1.00},
-    { hash = WEAPON_MARKSMANRIFLE, damageMultiplier = 1.00},
-    { hash = WEAPON_MARKSMANRIFLE_MK2, damageMultiplier = 1.00},
+    { hash = `WEAPON_SNIPERRIFLE`, damageMultiplier = 1.00},
+    { hash = `WEAPON_HEAVYSNIPER`, damageMultiplier = 1.00},
+    { hash = `WEAPON_HEAVYSNIPER_MK2`, damageMultiplier = 1.00},
+    { hash = `WEAPON_MARKSMANRIFLE`, damageMultiplier = 1.00},
+    { hash = `WEAPON_MARKSMANRIFLE_MK2`, damageMultiplier = 1.00},
     -- Heavy Weapons
-    { hash = WEAPON_RPG, damageMultiplier = 1.00},
-    { hash = WEAPON_GRENADELAUNCHER, damageMultiplier = 1.00},
-    { hash = WEAPON_GRENADELAUNCHER_SMOKE, damageMultiplier = 1.00},
-    { hash = WEAPON_MINIGUN, damageMultiplier = 1.00},
-    { hash = WEAPON_FIREWORK, damageMultiplier = 1.00},
-    { hash = WEAPON_RAILGUN, damageMultiplier = 1.00},
-    { hash = WEAPON_HOMINGLAUNCHER, damageMultiplier = 1.00},
-    { hash = WEAPON_COMPACTLAUNCHER, damageMultiplier = 1.00},
-    { hash = WEAPON_RAYMINIGUN, damageMultiplier = 1.00},
+    { hash = `WEAPON_RPG`, damageMultiplier = 1.00},
+    { hash = `WEAPON_GRENADELAUNCHER`, damageMultiplier = 1.00},
+    { hash = `WEAPON_GRENADELAUNCHER_SMOKE`, damageMultiplier = 1.00},
+    { hash = `WEAPON_MINIGUN`, damageMultiplier = 1.00},
+    { hash = `WEAPON_FIREWORK`, damageMultiplier = 1.00},
+    { hash = `WEAPON_RAILGUN`, damageMultiplier = 1.00},
+    { hash = `WEAPON_HOMINGLAUNCHER`, damageMultiplier = 1.00},
+    { hash = `WEAPON_COMPACTLAUNCHER`, damageMultiplier = 1.00},
+    { hash = `WEAPON_RAYMINIGUN`, damageMultiplier = 1.00},
     -- Melee
-    { hash = WEAPON_UNARMED, damageMultiplier = 0.25},
-    { hash = WEAPON_DAGGER, damageMultiplier = 0.25},
-    { hash = WEAPON_BAT, damageMultiplier = 0.25},
-    { hash = WEAPON_BOTTLE, damageMultiplier = 0.25},
-    { hash = WEAPON_CROWBAR, damageMultiplier = 0.25},
-    { hash = WEAPON_FLASHLIGHT, damageMultiplier = 0.25},
-    { hash = WEAPON_GOLFCLUB, damageMultiplier = 0.25},
-    { hash = WEAPON_HAMMER, damageMultiplier = 0.25},
-    { hash = WEAPON_HATCHET, damageMultiplier = 0.25},
-    { hash = WEAPON_KNUCKLE, damageMultiplier = 0.25},
-    { hash = WEAPON_KNIFE, damageMultiplier = 0.25},
-    { hash = WEAPON_MACHETE, damageMultiplier = 0.25},
-    { hash = WEAPON_SWITCHBLADE, damageMultiplier = 0.25},
-    { hash = WEAPON_NIGHTSTICK, damageMultiplier = 0.25},
-    { hash = WEAPON_WRENCH, damageMultiplier = 0.25},
-    { hash = WEAPON_BATTLEAXE, damageMultiplier = 0.25},
-    { hash = WEAPON_POOLCUE, damageMultiplier = 0.25},
-    { hash = WEAPON_STONE_HATCHET, damageMultiplier = 0.25},
+    { hash = `WEAPON_UNARMED`, damageMultiplier = 0.25},
+    { hash = `WEAPON_DAGGER`, damageMultiplier = 0.25},
+    { hash = `WEAPON_BAT`, damageMultiplier = 0.25},
+    { hash = `WEAPON_BOTTLE`, damageMultiplier = 0.25},
+    { hash = `WEAPON_CROWBAR`, damageMultiplier = 0.25},
+    { hash = `WEAPON_FLASHLIGHT`, damageMultiplier = 0.25},
+    { hash = `WEAPON_GOLFCLUB`, damageMultiplier = 0.25},
+    { hash = `WEAPON_HAMMER`, damageMultiplier = 0.25},
+    { hash = `WEAPON_HATCHET`, damageMultiplier = 0.25},
+    { hash = `WEAPON_KNUCKLE`, damageMultiplier = 0.25},
+    { hash = `WEAPON_KNIFE`, damageMultiplier = 0.25},
+    { hash = `WEAPON_MACHETE`, damageMultiplier = 0.25},
+    { hash = `WEAPON_SWITCHBLADE`, damageMultiplier = 0.25},
+    { hash = `WEAPON_NIGHTSTICK`, damageMultiplier = 0.25},
+    { hash = `WEAPON_WRENCH`, damageMultiplier = 0.25},
+    { hash = `WEAPON_BATTLEAXE`, damageMultiplier = 0.25},
+    { hash = `WEAPON_POOLCUE`, damageMultiplier = 0.25},
+    { hash = `WEAPON_STONE_HATCHET`, damageMultiplier = 0.25},
 }
-
 
 local function setWeaponDamageMultiplier(playerPed, targetPed)
     local weaponHash = GetSelectedPedWeapon(playerPed)
+    print("Selected weapon hash: " .. weaponHash)
     for _, weapon in ipairs(betterFightConfig) do
         if weapon.hash == weaponHash then
             local playerCoords = GetEntityCoords(playerPed)
@@ -113,9 +113,14 @@ local function setWeaponDamageMultiplier(playerPed, targetPed)
             local distance = #(playerCoords - targetCoords)
             local success, bone = GetPedLastDamageBone(targetPed)
 
+            print("Distance: " .. distance)
+            print("Last damage bone: " .. (bone or "nil"))
+
             if success and bone == 31086 and distance <= headshotRange then
-                SetPlayerWeaponDamageModifier(PlayerId(), 5.0)
+                print("Headshot detected within range. Setting damage to 999.0")
+                SetPlayerWeaponDamageModifier(PlayerId(), 10.0)
             else
+                print("Not a headshot or out of range. Setting damage to " .. weapon.damageMultiplier)
                 SetPlayerWeaponDamageModifier(PlayerId(), weapon.damageMultiplier)
             end
             break

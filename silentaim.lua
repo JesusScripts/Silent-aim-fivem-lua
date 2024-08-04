@@ -134,35 +134,12 @@ end
 local function checkHitOrKill(playerPed, targetPed)
     if HasEntityBeenDamagedByEntity(targetPed, playerPed, true) then
         if IsPedDeadOrDying(targetPed, true) then
-            print("Zabil jsi hráče: " .. GetPlayerName(NetworkGetPlayerIndexFromPed(targetPed)))
+
         else
-            print("Zasáhl jsi hráče: " .. GetPlayerName(NetworkGetPlayerIndexFromPed(targetPed)))
+
         end
         ClearEntityLastDamageEntity(targetPed)
     end
-end
-
-local function drawTargetPlayerName(name, isVisible)
-    if not showOverlay then return end
-
-    local text = name
-    if isVisible then
-        text = text .. " (Visible)"
-    else
-        text = text .. " (Not Visible)"
-    end
-
-    SetTextFont(0)
-    SetTextProportional(1)
-    SetTextScale(0.0, 0.5)
-    SetTextColour(255, 255, 255, 255)
-    SetTextDropshadow(0, 0, 0, 0, 255)
-    SetTextEdge(2, 0, 0, 0, 150)
-    SetTextDropShadow()
-    SetTextOutline()
-    SetTextEntry("STRING")
-    AddTextComponentString(text)
-    DrawText(0.9, 0.1)
 end
 
 local function drawFOV()
@@ -206,9 +183,7 @@ local function findClosestPlayer(playerPed)
 
     if closestPlayer then
         local playerName = GetPlayerName(NetworkGetPlayerIndexFromPed(closestPlayer))
-        targetPlayerName = "Míříš na hráče: " .. playerName
     else
-        targetPlayerName = ""
         isVisible = false
     end
 
@@ -231,15 +206,6 @@ CreateThread(function()
             SetEntityInvincible(playerPed, false)
         end
         Wait(0)
-    end
-end)
-
-CreateThread(function()
-    while true do
-        local playerPed = PlayerPedId()
-        local isVisible = findClosestPlayer(playerPed)
-        Wait(100)
-        drawTargetPlayerName(targetPlayerName, isVisible)
     end
 end)
 

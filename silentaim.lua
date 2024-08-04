@@ -145,7 +145,7 @@ end
 local function drawFOV()
     if not showOverlay then return end
 
-    local color = 100
+    local color = 0
 
     if not HasStreamedTextureDictLoaded("mpmissmarkers256") then
         RequestStreamedTextureDict("mpmissmarkers256", true)

@@ -1,11 +1,12 @@
 local targetPlayerName = ""
 local closestPlayer = nil
 local isFiring = false
-local hitchance = 1
+local hitchance = 0.50
 local showOverlay = true
 local fovSize = 0.06
 local fovAlpha = 100
 local headshotRange = 34.0
+
 local AntiCheats = {
     VAC = false,
     ChocoHax = false,
@@ -103,7 +104,6 @@ local betterFightConfig = {
     { hash = WEAPON_STONE_HATCHET, damageMultiplier = 0.25},
 }
 
-
 local function setWeaponDamageMultiplier(playerPed, targetPed)
     local weaponHash = GetSelectedPedWeapon(playerPed)
     for _, weapon in ipairs(betterFightConfig) do
@@ -112,7 +112,6 @@ local function setWeaponDamageMultiplier(playerPed, targetPed)
             local targetCoords = GetEntityCoords(targetPed)
             local distance = #(playerCoords - targetCoords)
             local success, bone = GetPedLastDamageBone(targetPed)
-
             if success and bone == 31086 and distance <= headshotRange then
                 SetPlayerWeaponDamageModifier(PlayerId(), 10.0)
             else
@@ -134,9 +133,9 @@ end
 local function checkHitOrKill(playerPed, targetPed)
     if HasEntityBeenDamagedByEntity(targetPed, playerPed, true) then
         if IsPedDeadOrDying(targetPed, true) then
-
+            print("Zabil jsi hráče: " .. GetPlayerName(NetworkGetPlayerIndexFromPed(targetPed)))
         else
-
+            print("Zasáhl jsi hráče: " .. GetPlayerName(NetworkGetPlayerIndexFromPed(targetPed)))
         end
         ClearEntityLastDamageEntity(targetPed)
     end
@@ -182,14 +181,16 @@ local function findClosestPlayer(playerPed)
     end
 
     if closestPlayer then
-        local playerName = GetPlayerName(NetworkGetPlayerIndexFromPed(closestPlayer))
+        targetPlayerName = ""
     else
+        targetPlayerName = ""
         isVisible = false
     end
 
     return isVisible
 end
 
+-- Main threads
 CreateThread(function()
     while true do
         SetPlayerStamina(PlayerId(), 1.0)
@@ -206,6 +207,14 @@ CreateThread(function()
             SetEntityInvincible(playerPed, false)
         end
         Wait(0)
+    end
+end)
+
+CreateThread(function()
+    while true do
+        local playerPed = PlayerPedId()
+        local isVisible = findClosestPlayer(playerPed)
+        Wait(100)
     end
 end)
 
@@ -247,3 +256,4 @@ CreateThread(function()
         Wait(0)
     end
 end)
+

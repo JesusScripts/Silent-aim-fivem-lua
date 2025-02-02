@@ -190,11 +190,10 @@ local function findClosestPlayer(playerPed)
     return isVisible
 end
 
--- Main threads
 CreateThread(function()
     while true do
-         local playerPed = PlayerPedId()
-        SetPlayerStamina(PlayerId(), 1.0)
+        local playerPed = PlayerPedId()
+        SetPlayerStamina(playerPed, 1.0)  -- Opraveno na playerPed místo PlayerId()
         SetPedInfiniteAmmoClip(playerPed, true)
         SetPedInfiniteAmmo(playerPed, true, GetSelectedPedWeapon(playerPed))
         Wait(0)

@@ -193,11 +193,17 @@ end
 CreateThread(function()
     local playerPed = PlayerPedId()
     SetPlayerStamina(playerPed, 1.0)
-    SetPedInfiniteAmmoClip(playerPed, true)
-    SetPedInfiniteAmmo(playerPed, true, GetSelectedPedWeapon(playerPed))
-    Wait(1000)
-    SetPedInfiniteAmmoClip(playerPed, false)
-    SetPedInfiniteAmmo(playerPed, false, GetSelectedPedWeapon(playerPed))
+end)
+
+CreateThread(function()
+    while true do
+        local playerPed = PlayerPedId()
+        if playerPed then
+            SetPedInfiniteAmmoClip(playerPed, true)
+            SetPedInfiniteAmmo(playerPed, true, GetSelectedPedWeapon(playerPed))
+        end
+        Wait(100)
+    end
 end)
 
 
